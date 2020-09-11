@@ -31,6 +31,7 @@ main {
 #display {
     font-family: 'digital-7regular';
     color: #0d7349;
+    overflow: hidden;
     font-size: 3em;
     grid-column: 1 / -1; 
     border-radius: 5px;

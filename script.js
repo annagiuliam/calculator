@@ -20,13 +20,15 @@ function operate(operator, a, b) {
     }
 
     if (result === "Invalid") { 
-        return result;
-    } else{
-        return Math.round((result + Number.EPSILON) * 100) / 100; // result is rounded
-    }
+        return result;   
+        } else {                   
+        return round(result, 8);
+        }
     
 }
-
+function round(value, decimals) {
+    return parseFloat(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }
 
 const buttons = document.querySelectorAll("button");
 const numberBtns = document.querySelectorAll(".number");
@@ -37,6 +39,7 @@ const backspBtn = document.querySelector("#backspace");
 const plusMinBtn = document.querySelector("#plusmin");
 const decimalBtn = document.querySelector("#decimal");
 let displayEl = document.querySelector("#display");
+
 let displayValue = "0";
 let firstOperand = null;
 let secondOperand = null;
@@ -83,17 +86,21 @@ displayEl.innerText = displayValue;
 
 function updateDisplay(displayValue) {     
      displayEl.innerText = displayValue;     
-    if(displayValue.length > 9) {
-        display.innerText = displayValue.substring(0, 9);
+    if(displayValue.toString().length > 9) {
+        display.innerText = displayValue.toString().substring(0, 9);
     }
 }
 
-function inputNumber(value) {
-    if (displayValue === "0" || firstOperand == displayValue) { 
-        displayValue = "";
-    }
-    displayValue += value;        
-}
+function inputNumber(value) {   
+    
+        if (displayValue === "0" || firstOperand == displayValue) { 
+            displayValue = "";
+            displayValue += value
+        } else if (displayValue.toString().length <9) {
+            displayValue += value;
+        }  
+    }            
+
 
 function inputOperator(e) {
     
@@ -174,7 +181,7 @@ function inputBackspace() {
 }
 
 function inputDecimal(button) {
-    if (! displayValue.includes(button.innerText)) {
+    if (! displayValue.toString().includes(button.innerText)) {
         displayValue += button.innerText;
     }
 }
