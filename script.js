@@ -43,9 +43,9 @@ let displayEl = document.querySelector("#display");
 let displayValue = "0";
 let firstOperand = null;
 let secondOperand = null;
-let firstOperator = null;
-let secondOperator = null;
+let operator = null;
 let result = null;
+let startNew = true;
 
 function clickButton() {
     buttons.forEach((button) => {
@@ -93,68 +93,45 @@ function updateDisplay(displayValue) {
 
 function inputNumber(value) {   
     
-        if (displayValue === "0" || firstOperand == displayValue) { 
+        if (displayValue === "0") { 
             displayValue = "";
-            displayValue += value
-        } else if (displayValue.toString().length <9) {
-            displayValue += value;
-        }  
-    }            
+            
+        } else if (firstOperand != null && startNew === true) {
+            startNew = false
+            displayValue = "";
+        }
+
+        displayValue += value;
+}            
 
 
 function inputOperator(e) {
-    
-    if (firstOperator != null && secondOperator === null) {      // 1 perator already selected
-        secondOperator = event.target.innerText;
-        secondOperand = parseFloat(displayValue);             
-        result = operate(firstOperator, firstOperand, secondOperand);        
-        displayValue = result;  
-        firstOperand = result;     
-        
-     } else if (firstOperator != null && secondOperator != null) {             
-        secondOperand = parseFloat(displayValue);  
-        result = operate(secondOperator, firstOperand, secondOperand);
-        secondOperator = event.target.innerText;
+    if (firstOperand != null && operator != null) {
+        secondOperand = parseFloat(displayValue);
+        result = operate(operator, firstOperand, secondOperand);
         displayValue = result;
-        firstOperand = result;   
-              
-        
-    } else {       // firstOperator === 0, no op selected yet         
-        firstOperator = event.target.innerText;
+        firstOperand = result;
+        secondOperand = null;
+        operator = event.target.innerText;
+        startNew = true;
+    } else {                    // operator === 0, no op selected yet
+        operator = event.target.innerText;
         firstOperand = parseFloat(displayValue);
-       
-    }    
+        startNew = true;
+    }   
 }
 
 function inputEquals() {
-    if (firstOperator === null) {  //press = before digiting firstOperator or second operand
-        displayValue = displayValue; 
-
-    } else if (firstOperator != null && secondOperator === null) {
-        secondOperand = parseFloat(displayValue);
-        result = operate(firstOperator, firstOperand, secondOperand);
-        displayValue = result;
-        firstOperand = result;
-        secondOperand = null;
-        firstOperator = null;
-        secondOperator = null;
-
-    } else if (firstOperator != null && secondOperator != null) {
-        secondOperand = parseFloat(displayValue);
-        result = operate(secondOperator, firstOperand, secondOperand);
-        displayValue = result;
-        firstOperand = result;
-        secondOperand = null;
-        firstOperator = null;
-        secondOperator = null;
+    if (operator === null) {  //press = before digiting operator or second operand
+        displayValue = displayValue;     
     } else {
         secondOperand = parseFloat(displayValue);
-        result = operate(firstOperator, firstOperand, secondOperand);
+        result = operate(operator, firstOperand, secondOperand);
         displayValue = result;
         secondOperand = null;        
         result = null;
-        firstOperator = null;
-        secondOperator = null;       
+        operator = null;
+        startNew = true;      
     }
 }
 
@@ -163,8 +140,8 @@ function clearDisplay() {
     firstOperand = null;
     secondOperand = null;
     result = null;
-    firstOperator = null;
-    secondOperator = null;
+    operator = null;
+    startNew = true;
 }
 
 function inputBackspace() {
